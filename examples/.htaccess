@@ -1,0 +1,3 @@
+Options +Indexes
+
+AddOutputFilterByType DEFLATE text/plain
