@@ -30,7 +30,7 @@ const myHash = crypto.createHash('sha256').update(rawString).digest('hex');
     "api_client_time": "1634300823",
     "api_client_salt": "you_can_type_anything_here",
     "api_client_hash": "7ce155b944636d524e17b7881a398bebc786a38073dc28b867e7d952cf0ebb46",
-    "client_email": "daniel@clinicsoftware.com",
+    "client_email": "contact@clinicsoftware.com",
     "is_online_account": "0"
 }
 ```
