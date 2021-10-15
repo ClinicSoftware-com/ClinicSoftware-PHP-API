@@ -19,7 +19,7 @@ const api_secret      = "your_clinicsoftware_client_secret_goes_here"; // This i
 const rawString = api_client_salt + api_client_time + api_secret
 
 // The final sha256 hash that will also be checked server-side
-const myHash = 'crypto.createHash('sha256').update(rawString).digest('utf-8');
+const myHash = crypto.createHash('sha256').update(rawString).digest('hex');
 ```
 ---
 1.1 Here's the payload as a JSON, you must include all those fields
