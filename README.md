@@ -12,6 +12,9 @@ The bindings require the following php extensions in order to work properly:
 - `mbstring`
 
 ## Running Examples
+
+⚠️ If you wouldd like a more "generic" example please check [This File Out](examples/cURL.md) ⚠️
+
 1. Clone the repository 
 ```bash
 git clone https://github.com/ClinicSoftware-com/ClinicSoftware-PHP-API
