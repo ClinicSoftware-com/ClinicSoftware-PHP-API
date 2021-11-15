@@ -11,7 +11,7 @@ $api->setURL($api_config['api_url']);
 
 // request
 $client_id = 1;
-$result = $api->getClients(date("c", strtotime("-1 month")), 50, 0, [45592, 45581, 45580, 45579]);
+$result = $api->getAppointments("2021-08-01", "2021-12-31", "2021-11-01");
 // $status = $api->getLastStatus();
 
 

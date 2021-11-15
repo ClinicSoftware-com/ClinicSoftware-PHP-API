@@ -342,13 +342,18 @@ class Salon_api
         return $this->call($params);
     }
 
-    public function getClients(string $last_modified, int $limit = 10, int $offset = 0) {
+    public function getClients(string $last_modified, int $limit = 10, int $offset = 0, ?array $whitelist = null) {
 
         $params = [];
         $params["action"]        = "get_clients";
-        $params["last_modified"] = date("c", strtotime($last_modified));
         $params["limit"]         = $limit;
         $params["offset"]        = $offset;
+
+        if ( !empty($last_modified) )
+            $params["last_modified"] = date("c", strtotime($last_modified));
+
+        if ( !empty($whitelist) )
+            $params["whitelist"] = implode(',', $whitelist);
 
         return $this->call($params);
     }
@@ -468,6 +473,21 @@ class Salon_api
         $params = array();
         $params['action'] = 'client_get_appointments';
         $params['client_id'] = $client_id;
+        return $this->call($params);
+    }
+
+    public function getAppointments(string $from = "2021-11-01", string $to = '2021-12-20', ?string $last_modified = null) {
+        // Set the parameters for the call
+        $params = [
+            "action" => "get_appointments",
+            // From date Y-m-d
+            "from"           => $from,
+            // To date Y-m-d
+            "to"             => $to,
+            // Last modified Y-m-d
+            "last_modified"  => $last_modified,
+        ];
+
         return $this->call($params);
     }
 
