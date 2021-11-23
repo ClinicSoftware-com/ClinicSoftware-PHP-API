@@ -157,6 +157,36 @@ class Salon_api
     }
 
     /**
+     * Get all client documents
+     * To get the actual document, use the download_document function
+     * @returns [ "files" => [ "", "" ] ]
+     */
+    public function get_documents(int $client_id) {
+        $params = [
+            'action'    => 'get_documents',
+            'client_id' => $client_id,
+        ];
+
+        // Return the results of the call with the provided parameters
+        return $this->call($params);
+    }
+
+    /**
+     * Download a client's file data, 
+     * @returns [ "data" => BASE64STRING ]
+     */
+    public function download_documents(int $client_id, string $filePath) {
+        $params = [
+            'action'        => 'download_document',
+            'client_id'     => $client_id,
+            'document_path' => $filePath,
+        ];
+
+        // Return the results of the call with the provided parameters
+        return $this->call($params);
+    }
+
+    /**
      * Get the relationships of a client
      * @param int $client_id The id of the target client.
      */
