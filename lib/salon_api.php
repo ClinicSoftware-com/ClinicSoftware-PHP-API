@@ -350,6 +350,17 @@ class Salon_api
         return $this->call($params);
     }
 
+    public function addStaffMessage($client_id, $salon_id, $staff_id, $message)
+    {
+        $params = array();
+        $params['action']       = 'add_client_message';
+        $params['salon_id']     = $salon_id;
+        $params['client_id']    = $client_id;
+        $params['staff_id']     = $staff_id;
+        $params['message']      = $message;
+        return $this->call($params);
+    }
+
     public function getSalons()
     {
         $params = array();
