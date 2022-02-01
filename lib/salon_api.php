@@ -383,6 +383,30 @@ class Salon_api
         return $this->call($params);
     }
 
+    /**
+     * Get shifts from a date to a date, optionally filter by staff.
+     * @param 
+     */
+    public function getShifts(DateTime $dateFrom, DateTime $dateTo, ?int $staff_id = null): ?array {
+        $params = [];
+        $params["action"]        = "staff_get_shift";
+
+        // Handle invalid Dates
+        if ( $dateFrom->getTimestamp() > $dateTo->getTimestamp() ) 
+            throw new Exception("The from date can not be greater than the to date");
+
+        if ( round(((($dateTo->getTimestamp() - $dateFrom->getTimestamp()) / 60) / 60) / 24, 2) > 30)
+            throw new Exception("The date range is invalid, please do not use a larger date range than 1 month");
+
+        $params["staff_id"]  = $staff_id;
+
+        $params["date_from"] = $dateFrom->format("Y-m-d");
+        $params["date_to"  ] = $dateTo->format("Y-m-d");
+
+        // Make the call to the API
+        return $this->call($params);
+    }
+
     public function getClients(string $last_modified, int $limit = 10, int $offset = 0, ?array $whitelist = null) {
 
         $params = [];
