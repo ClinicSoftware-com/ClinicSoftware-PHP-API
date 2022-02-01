@@ -29,9 +29,13 @@ $data['discount_value']  = 5.56; // float, global client discount
 $data['notes']           = 'test notes';
 $data['salon_id']        = 0;  // defaults to first location found if not specified or 0
 $data['courses_barcode'] = ''; // valid and unique EAN8/EAN13 barcode, generated automatically if not specified
-$data['marketing_list_name'] = 'download_guide';
-$data['marketing_list_name'] = 'Virtual Consultations';
 $data['description']         = 'This message can be in a form provided by a lead or programatically added based on the form\'s location or any other method, it will be added into the lead\'s description';
+
+// Add to a specific marketing list ( for automations )
+$data['marketing_list_name'] = 'Virtual Consultations';
+
+// Set the marketing source of the lead, these can be found inside of the software.
+$data['marketing_source_id'] = 1;
 
 
 // note: the newly added client will have the following attributes set to 1: user_id (MANAGER), is_confirmed, is_online_account
