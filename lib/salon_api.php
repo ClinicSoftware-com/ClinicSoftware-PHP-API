@@ -407,6 +407,19 @@ class Salon_api
         return $this->call($params);
     }
 
+    /**
+     * Get all of the available appointment statuses
+     * @return Array<string>
+     */
+    public function appointment_get_statuses(): array {
+        $params = [
+            "action" => "appointment_get_statuses"
+        ];
+
+        // Make the call to the API
+        return $this->call($params);
+    }
+
     public function getClients(string $last_modified, int $limit = 10, int $offset = 0, ?array $whitelist = null) {
 
         $params = [];
