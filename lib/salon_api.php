@@ -569,6 +569,22 @@ class Salon_api
         return $this->call($params);
     }
 
+    /**
+     * Add an appointment to the system
+     */
+    public function addAppointment( AppointmentObject $appointment ) {
+        // Init the params for the call
+        $params = [ "action" => "appointment_add" ];
+
+        // Parse the provided appointment
+        $parsedAppointment = $appointment->toApiJSON();
+
+        // Merge into params
+        $params = array_merge($params, $parsedAppointment);
+
+        return $this->call($params);
+    }
+
     public function getClientBalance($client_id)
     {
         $params = array();
@@ -734,3 +750,154 @@ class Salon_api
         fclose($fh);
     }
 }
+
+
+
+class AppointmentObject {
+
+    public function __construct(int $salon_id) {
+        $this->salon_id = $salon_id;
+    }
+
+    public function toApiJSON(): array {
+        $parsed = [];
+
+        { // Error checking
+            if ( empty($this->salon_id) || $this->salon_id < 1 )
+                throw new Exception("Invalid Salon ID");
+
+            if ( empty($this->staffID) || $this->staffID < 1 )
+                throw new Exception("Invalid staffID");
+
+            if ( empty($this->clientID) || $this->clientID < 1 )
+                throw new Exception("Invalid clientID");
+
+            if ( empty($this->datetime) || $this->datetime->getTimestamp() < time() )
+                throw new Exception("Invalid DateTime: {$this->datetime->getTimestamp()} < " . time());
+
+            if ( empty($this->duration) || $this->duration < 5 )
+                throw new Exception("Invalid Duration");
+
+            if ( empty($this->status) )
+                throw new Exception("Invalid Status");
+
+            if ( empty($this->items) )
+                throw new Exception("Please provide a valid list of items to add to the booking ( Services )");
+        }
+
+        // Build the object
+        {
+            $parsed['salon_id']            = $this->salon_id;
+            $parsed['date']                = $this->datetime->format("Y-m-d");
+            $parsed['time']                = $this->datetime->format("H:i:s");
+            $parsed['duration']            = $this->duration;
+            $parsed['staff']               = $this->staffID;
+            $parsed['client']              = $this->clientID;
+            $parsed['status']              = $this->status;
+            $parsed['items']               = json_encode($this->items);
+    
+            $parsed['title']               = $this->title;
+            $parsed['notes']               = $this->notes;
+            $parsed['booking_type_id']     = $this->booking_type_id;
+            $parsed['booking_requested']   = $this->booking_requested;
+            $parsed['marketing_source_id'] = $this->marketing_source_id;
+        }
+
+        return $parsed;
+    }
+
+
+    /**
+     * @required true
+     * @description The of the salon to send the client to
+     * @type int
+     */
+    public $salon_id = null;
+
+    /**
+     * @required false
+     * @description The title of the appointment, this is visible in the daybook
+     * @type string
+     */
+    public $title = null;
+
+    /**
+     * @required false
+     * @description Notes for appointment
+     * @type string
+     */
+    public $notes = null;
+
+    /**
+     * @required true
+     * @description The date and the time of the appointment
+     * @type DateTime
+     */
+    public $datetime = null;
+
+    /**
+     * @required true
+     * @description The duration of the appointment expressed in minutes.
+     * @type int
+     */
+    public $duration = null;
+
+    /**
+     * @required true
+     * @description The ID of the staff member to be assigned to the booking
+     * @type int
+     */
+    public $staffID = null;
+
+    /**
+     * @required true
+     * @description The ID of the client to be assigned to the booking
+     * @type int
+     */
+    public $clientID = null;
+
+    /**
+     * @required true
+     * @description The status of the booking
+     * @type string
+     */
+    public $status = "booked";
+
+    /**
+     * @required false
+     * @description The type of appointment (id)
+     * @deprecated
+     * @type string
+     */
+    public $booking_type_id = null;
+
+    /**
+     * @required false
+     * @description Which staff member was originally requested by the client
+     * @type string
+     */
+    public $booking_requested = null;
+
+    /**
+     * @mandatory true
+     * @description The items(services)(course) of the appointment
+     * @type Array<Object>
+     * @example [{item_id: 123, is_free: true}, {item_id: 412}]
+     * @type array
+     */
+    public $items = [];
+
+    /**
+     * @mandatory false
+     * @description Add marketing source to appointment
+     * @type int
+     */
+    public $marketing_source_id = null;
+
+}
+
+
+
+
+
+
