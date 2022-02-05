@@ -593,7 +593,7 @@ class Salon_api
     public function cancelAppointment( int $appointmentID, int $staffID = 0) {
         // Set the parameters for the call
         $params = [
-            "action" => "cancel_appointment",
+            "action" => "appointment_cancel",
             // The ID of the appointment to cancel
             "appointment_id"  => $appointmentID,
             // The ID of the appointment to cancel
