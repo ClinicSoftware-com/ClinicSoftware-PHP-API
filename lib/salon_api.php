@@ -585,6 +585,24 @@ class Salon_api
         return $this->call($params);
     }
 
+    /**
+     * Cancel an appointment
+     * @param int $appointmentID The id of the appointment to cancel.
+     * @param int $staffID The id of the staff that has performed this action, by default it will be 0 which means "client"
+     */
+    public function cancelAppointment( int $appointmentID, int $staffID = 0) {
+        // Set the parameters for the call
+        $params = [
+            "action" => "appointment_cancel",
+            // The ID of the appointment to cancel
+            "appointment_id"  => $appointmentID,
+            // The ID of the appointment to cancel
+            "staff_id"  => $staffID,
+        ];
+
+        return $this->call($params);
+    }
+
     public function getClientBalance($client_id)
     {
         $params = array();
