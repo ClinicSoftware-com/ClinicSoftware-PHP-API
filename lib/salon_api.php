@@ -586,6 +586,48 @@ class Salon_api
     }
 
     /**
+     * @description Get the availability of certain services in a period of time
+     * @param DateTime  The date and time of the beginning of the appointment
+     * @param int       The duration of the appointment in minutes ( Minimum 5 )
+     * @param array     A simple Array<int> of service IDs
+     * @return array    An array of staff members and their available time slots for the appointment
+     */
+    public function appointment_availability(\DateTime $date, int $duration, array $items) {
+
+        { // Error Checking
+            // Make sure the duration is at least 5 minutes
+            if ( $duration < 5 ) {
+                throw new Exception("The duration must be greater than or equal to 5 minutes");
+            } else if ( $duration > 1440 ) {
+                throw new Exception("The duration of an appointment can not be greater than 24h/1440min");
+            }
+    
+            // Check if there are any items in the array
+            if ( empty($items) || count($items) < 1 ) {
+                throw new Exception("You must provide at least 1 service ID");
+            }
+    
+            // Check if the provided services are integers
+            foreach( $items as $i ) {
+                if ( !is_int($i) ) {
+                    throw new Exception("The service ID must be of type Integer");
+                }
+            }
+        }
+
+        // Set the parameters for the call
+        $params = [
+            "action" => "appointment_availability",
+            // Add the starting Date and Time
+            "date" => $date->format("Y-m-d"),
+            // Provide the items
+            "items" => implode(",", $items),
+        ];
+
+        return $this->call($params);
+    }
+
+    /**
      * Cancel an appointment
      * @param int $appointmentID The id of the appointment to cancel.
      * @param int $staffID The id of the staff that has performed this action, by default it will be 0 which means "client"
