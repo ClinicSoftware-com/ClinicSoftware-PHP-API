@@ -13,7 +13,9 @@ Javascript Method:
 const crypto = require('crypto');
 
 const api_client_salt = "you_can_type_anything_here";
-const api_client_time = (new Date()).toString()
+
+// Timestamp in a UNIX format goes here
+const api_client_time = new Date().getTime()
 const api_secret      = "your_clinicsoftware_client_secret_goes_here"; // This is the most important
 
 const rawString = api_client_salt + api_client_time + api_secret
