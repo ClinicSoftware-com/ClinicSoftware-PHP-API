@@ -40,6 +40,12 @@ require_once '../lib/salon_api.php';
 // Initialize the API
 $api = new Salon_api($api_config['client_key'], $api_config['client_secret'],  $api_config['business_alias'],  $api_config['api_url']);
 
+// Make sure to use this format for the api_url
+
+https://serverX.clinicsoftware.com/api_business
+
+Replace X with the server numnber you are using on live for your CRM license, example serverX = server7
+
 // Use any of the API calls
 $result = $api->get_services(null, "2022-01-01", 1000);
 
