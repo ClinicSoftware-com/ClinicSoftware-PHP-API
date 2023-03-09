@@ -44,7 +44,7 @@ $api = new Salon_api($api_config['client_key'], $api_config['client_secret'],  $
 
 https://serverX.clinicsoftware.com/api_business
 
-Replace X with the server numnber you are using on live for your CRM license, example serverX = server7
+Replace X with the server number you are using on live for your CRM license, example serverX = server7
 
 // Use any of the API calls
 $result = $api->get_services(null, "2022-01-01", 1000);
