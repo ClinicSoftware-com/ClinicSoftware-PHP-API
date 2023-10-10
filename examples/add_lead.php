@@ -37,6 +37,8 @@ $data['marketing_list_name'] = 'Virtual Consultations';
 // Set the marketing source of the lead, these can be found inside of the software.
 $data['marketing_source_id'] = 1;
 
+// Set the doctor name of the marketing source when you need a text area, for example the "Doctor name". This value is of type vchar.
+$data['marketing_source_value'] = 'Dr Mark Smith';
 
 // note: the newly added client will have the following attributes set to 1: user_id (MANAGER), is_confirmed, is_online_account
 // mandatory fields: name, email, password
