@@ -40,6 +40,9 @@ $data['marketing_source_id'] = 1;
 // Set the doctor name of the marketing source when you need a text area, for example the "Doctor name". This value is of type vchar.
 $data['marketing_source_value'] = 'Dr Mark Smith';
 
+// Set the custom field name and the custom field id when you need a text area, for example the "Allergies". This value is of type vchar.
+$data['custom_field17'] = 'Allergies';
+
 // note: the newly added client will have the following attributes set to 1: user_id (MANAGER), is_confirmed, is_online_account
 // mandatory fields: name, email, password
 // returns client id
