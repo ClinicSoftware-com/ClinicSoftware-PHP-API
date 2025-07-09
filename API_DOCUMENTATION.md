@@ -1259,7 +1259,6 @@ $api->setDebug(getenv('APP_DEBUG') === 'true');
 
 For additional support and documentation, visit:
 - [GitHub Repository](https://github.com/ClinicSoftware-com/ClinicSoftware-PHP-API)
-- [API Wiki](https://github.com/ClinicSoftware-com/ClinicSoftware-PHP-API/wiki)
 - Contact your ClinicSoftware account manager for API keys and server information
 
 ---
@@ -1270,4 +1269,4 @@ This library is provided under the terms specified in the LICENSE file.
 
 ---
 
-*Last Updated: December 2023*
+*Last Updated: December 2025*
