@@ -1269,4 +1269,4 @@ This library is provided under the terms specified in the LICENSE file.
 
 ---
 
-*Last Updated: December 2025*
+*Last Updated: July 2025*
