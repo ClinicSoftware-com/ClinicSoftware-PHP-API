@@ -6,23 +6,23 @@ class Salon_api
     private $clientSecret;
     private $apiURL = '';
     private $ch;
-    private $last_result  = null;
-    private $last_status  = null;
-    private $last_error   = null;
+    private $last_result = null;
+    private $last_status = null;
+    private $last_error = null;
     private $log_filename = null;
-    private $debug        = false;
-    
-    public function __construct($clientKey, $clientSecret, $businessAlias = '', $apiURL = '' )
+    private $debug = false;
+
+    public function __construct($clientKey, $clientSecret, $businessAlias = '', $apiURL = '')
     {
-        $this->clientKey    = $clientKey;
+        $this->clientKey = $clientKey;
         $this->clientSecret = $clientSecret;
         $this->log_filename = __DIR__ . '/log.txt';
-        $this->apiURL       = $apiURL;
-        
+        $this->apiURL = $apiURL;
+
         if (!empty($businessAlias)) {
             $this->businessAlias = $businessAlias;
         }
-        
+
         if ($this->debug) {
             $this->clearLog();
         }
@@ -32,11 +32,9 @@ class Salon_api
         curl_setopt($this->ch, CURLOPT_HEADER, false);
         curl_setopt($this->ch, CURLOPT_POST, true);
         curl_setopt($this->ch, CURLOPT_RETURNTRANSFER, true);
-        
         curl_setopt($this->ch, CURLOPT_SSL_VERIFYHOST, 0);
         curl_setopt($this->ch, CURLOPT_SSL_VERIFYPEER, 0);
         //curl_setopt($ch, CURLOPT_CAINFO, __DIR__ . '/.cacert');
-        
         curl_setopt($this->ch, CURLOPT_TIMEOUT, 30);
         curl_setopt($this->ch, CURLOPT_USERAGENT, 'ClinicSoftware API PHP-SDK/1.6');
     }
@@ -66,7 +64,7 @@ class Salon_api
     {
         return $this->last_result;
     }
-    
+
     public function getLastStatus()
     {
         return $this->last_status;
@@ -81,10 +79,10 @@ class Salon_api
     {
         $this->last_result = null;
         $this->last_status = null;
-        $this->last_error  = null;
+        $this->last_error = null;
 
         $params['business_client_alias'] = $this->businessAlias;
-        $params['api_client_key']  = $this->clientKey;
+        $params['api_client_key'] = $this->clientKey;
         $params['api_client_time'] = time();
         $params['api_client_salt'] = uniqid(mt_rand(), true);
         $params['api_client_hash'] = hash('sha256', $params['api_client_salt'] . $params['api_client_time'] . $this->clientSecret);
@@ -138,17 +136,18 @@ class Salon_api
             return null;
         }
 
-        return empty($result['data'])? null : $result['data'];
+        return empty($result['data']) ? null : $result['data'];
     }
 
-    public function add_document(int $client_id, string $base64, string $document_name, string $mime_type, bool $automatically_rename = true) {
+    public function add_document(int $client_id, string $base64, string $document_name, string $mime_type, bool $automatically_rename = true)
+    {
 
         $params = [
-            'action'               => 'add_document',
-            'client_id'            => $client_id,
-            'document_name'        => $document_name,
-            'document_b64'         => $base64,
-            'mime_type'            => $mime_type,
+            'action' => 'add_document',
+            'client_id' => $client_id,
+            'document_name' => $document_name,
+            'document_b64' => $base64,
+            'mime_type' => $mime_type,
             'automatically_rename' => $automatically_rename ? 1 : 0,
         ];
 
@@ -161,9 +160,10 @@ class Salon_api
      * To get the actual document, use the download_document function
      * @returns [ "files" => [ "", "" ] ]
      */
-    public function get_documents(int $client_id) {
+    public function get_documents(int $client_id)
+    {
         $params = [
-            'action'    => 'get_documents',
+            'action' => 'get_documents',
             'client_id' => $client_id,
         ];
 
@@ -175,10 +175,11 @@ class Salon_api
      * Download a client's file data, 
      * @returns [ "data" => BASE64STRING ]
      */
-    public function download_documents(int $client_id, string $filePath) {
+    public function download_documents(int $client_id, string $filePath)
+    {
         $params = [
-            'action'        => 'download_document',
-            'client_id'     => $client_id,
+            'action' => 'download_document',
+            'client_id' => $client_id,
             'document_path' => $filePath,
         ];
 
@@ -190,10 +191,11 @@ class Salon_api
      * Get the relationships of a client
      * @param int $client_id The id of the target client.
      */
-    public function getRelationship(int $client_id) {
+    public function getRelationship(int $client_id)
+    {
 
         $params = [
-            'action'    => 'get_relationship',
+            'action' => 'get_relationship',
             'client_id' => $client_id,
         ];
 
@@ -208,36 +210,37 @@ class Salon_api
      * @param int $limit = 10 A limit of objects to return
      * @param int $offset = 0 An offset for the object array return
      */
-    public function get_services($id = null, $last_modified = null, int $limit = 10, int $offset = 0) {
+    public function get_services($id = null, $last_modified = null, int $limit = 10, int $offset = 0)
+    {
 
-        if ( gettype($last_modified) == "string" ) {
+        if (gettype($last_modified) == "string") {
             // Parse the last modified to a UNIX timestamp in seconds
             $last_modified = strtotime($last_modified);
             // Check if the conversion failed
-            if ( $last_modified === FALSE )
+            if ($last_modified === FALSE)
                 throw new Exception("Invalid date provided as string");
 
             // Correctly format last_modified
             $last_modified = date("c", $last_modified);
-        } else if ( is_a($last_modified, "DateTime") ) {
+        } else if (is_a($last_modified, "DateTime")) {
             $last_modified = $last_modified->format("c");
         }
 
         // Check if the id is in array format
-        if ( is_array($id) ) {
-            foreach( $id as $i ) {
-                if ( is_object($i) || is_array($i) ) {
+        if (is_array($id)) {
+            foreach ($id as $i) {
+                if (is_object($i) || is_array($i)) {
                     throw new Exception("Invalid id provided, please only provide an array of strings or numbers");
                 }
             }
         }
 
         $params = [
-            'action'        => 'get_services',
-            'id'            => $id,
+            'action' => 'get_services',
+            'id' => $id,
             'last_modified' => $last_modified,
-            'limit'         => $limit,
-            'offset'        => $offset,
+            'limit' => $limit,
+            'offset' => $offset,
         ];
 
         // Return the results of the call with the provided parameters
@@ -247,10 +250,10 @@ class Salon_api
     public function getClientNofSessionCourses($client_id, $date_from = null, $date_to = null, $treatment = null)
     {
         $params = array();
-        $params['action']    = 'client_get_nof_session_courses';
+        $params['action'] = 'client_get_nof_session_courses';
         $params['client_id'] = $client_id;
         $params['date_from'] = $date_from;
-        $params['date_to']   = $date_to;
+        $params['date_to'] = $date_to;
         $params['treatment'] = $treatment;
         return $this->call($params);
     }
@@ -258,12 +261,12 @@ class Salon_api
     public function getClientSessionCoursesPag($client_id, $date_from = null, $date_to = null, $treatment = null, $offset = 0, $row_count = 0)
     {
         $params = array();
-        $params['action']    = 'client_get_session_courses_pag';
+        $params['action'] = 'client_get_session_courses_pag';
         $params['client_id'] = $client_id;
         $params['date_from'] = $date_from;
-        $params['date_to']   = $date_to;
+        $params['date_to'] = $date_to;
         $params['treatment'] = $treatment;
-        $params['offset']    = $offset;
+        $params['offset'] = $offset;
         $params['row_count'] = $row_count;
         return $this->call($params);
     }
@@ -271,10 +274,10 @@ class Salon_api
     public function getClientNofMinutesCourses($client_id, $date_from = null, $date_to = null, $treatment = null)
     {
         $params = array();
-        $params['action']    = 'client_get_nof_minutes_courses';
+        $params['action'] = 'client_get_nof_minutes_courses';
         $params['client_id'] = $client_id;
         $params['date_from'] = $date_from;
-        $params['date_to']   = $date_to;
+        $params['date_to'] = $date_to;
         $params['treatment'] = $treatment;
         return $this->call($params);
     }
@@ -282,12 +285,12 @@ class Salon_api
     public function getClientMinutesCoursesPag($client_id, $date_from = null, $date_to = null, $treatment = null, $offset = 0, $row_count = 0)
     {
         $params = array();
-        $params['action']    = 'client_get_minutes_courses_pag';
+        $params['action'] = 'client_get_minutes_courses_pag';
         $params['client_id'] = $client_id;
         $params['date_from'] = $date_from;
-        $params['date_to']   = $date_to;
+        $params['date_to'] = $date_to;
         $params['treatment'] = $treatment;
-        $params['offset']    = $offset;
+        $params['offset'] = $offset;
         $params['row_count'] = $row_count;
         return $this->call($params);
     }
@@ -353,11 +356,11 @@ class Salon_api
     public function addStaffMessage($client_id, $salon_id, $staff_id, $message)
     {
         $params = array();
-        $params['action']       = 'add_client_message';
-        $params['salon_id']     = $salon_id;
-        $params['client_id']    = $client_id;
-        $params['staff_id']     = $staff_id;
-        $params['message']      = $message;
+        $params['action'] = 'add_client_message';
+        $params['salon_id'] = $salon_id;
+        $params['client_id'] = $client_id;
+        $params['staff_id'] = $staff_id;
+        $params['message'] = $message;
         return $this->call($params);
     }
 
@@ -367,7 +370,7 @@ class Salon_api
         $params['action'] = 'get_salons';
         return $this->call($params);
     }
-    
+
     public function getBarcodeImage($barcode)
     {
         $params = array();
@@ -387,21 +390,22 @@ class Salon_api
      * Get shifts from a date to a date, optionally filter by staff.
      * @param 
      */
-    public function getShifts(DateTime $dateFrom, DateTime $dateTo, ?int $staff_id = null): ?array {
+    public function getShifts(DateTime $dateFrom, DateTime $dateTo, ?int $staff_id = null): ?array
+    {
         $params = [];
-        $params["action"]        = "staff_get_shift";
+        $params["action"] = "staff_get_shift";
 
         // Handle invalid Dates
-        if ( $dateFrom->getTimestamp() > $dateTo->getTimestamp() ) 
+        if ($dateFrom->getTimestamp() > $dateTo->getTimestamp())
             throw new Exception("The from date can not be greater than the to date");
 
-        if ( round(((($dateTo->getTimestamp() - $dateFrom->getTimestamp()) / 60) / 60) / 24, 2) > 30)
+        if (round(((($dateTo->getTimestamp() - $dateFrom->getTimestamp()) / 60) / 60) / 24, 2) > 30)
             throw new Exception("The date range is invalid, please do not use a larger date range than 1 month");
 
-        $params["staff_id"]  = $staff_id;
+        $params["staff_id"] = $staff_id;
 
         $params["date_from"] = $dateFrom->format("Y-m-d");
-        $params["date_to"  ] = $dateTo->format("Y-m-d");
+        $params["date_to"] = $dateTo->format("Y-m-d");
 
         // Make the call to the API
         return $this->call($params);
@@ -411,7 +415,8 @@ class Salon_api
      * Get all of the available appointment statuses
      * @return Array<string>
      */
-    public function appointment_get_statuses(): array {
+    public function appointment_get_statuses(): array
+    {
         $params = [
             "action" => "appointment_get_statuses"
         ];
@@ -420,17 +425,18 @@ class Salon_api
         return $this->call($params);
     }
 
-    public function getClients(string $last_modified, int $limit = 10, int $offset = 0, ?array $whitelist = null) {
+    public function getClients(string $last_modified, int $limit = 10, int $offset = 0, ?array $whitelist = null)
+    {
 
         $params = [];
-        $params["action"]        = "get_clients";
-        $params["limit"]         = $limit;
-        $params["offset"]        = $offset;
+        $params["action"] = "get_clients";
+        $params["limit"] = $limit;
+        $params["offset"] = $offset;
 
-        if ( !empty($last_modified) )
+        if (!empty($last_modified))
             $params["last_modified"] = date("c", strtotime($last_modified));
 
-        if ( !empty($whitelist) )
+        if (!empty($whitelist))
             $params["whitelist"] = implode(',', $whitelist);
 
         return $this->call($params);
@@ -473,7 +479,8 @@ class Salon_api
         return $this->call($params);
     }
 
-    public function getLeadByPhone($client_phone) {
+    public function getLeadByPhone($client_phone)
+    {
         $params = array();
         $params['action'] = 'get_lead_by_phone';
         $params['lead_phone'] = $client_phone;
@@ -554,16 +561,17 @@ class Salon_api
         return $this->call($params);
     }
 
-    public function getAppointments(string $from = "2021-11-01", string $to = '2021-12-20', ?string $last_modified = null) {
+    public function getAppointments(string $from = "2024-11-01", string $to = '2024-12-20', ?string $last_modified = null)
+    {
         // Set the parameters for the call
         $params = [
             "action" => "get_appointments",
             // From date Y-m-d
-            "from"           => $from,
+            "from" => $from,
             // To date Y-m-d
-            "to"             => $to,
+            "to" => $to,
             // Last modified Y-m-d
-            "last_modified"  => $last_modified,
+            "last_modified" => $last_modified,
         ];
 
         return $this->call($params);
@@ -572,9 +580,10 @@ class Salon_api
     /**
      * Add an appointment to the system
      */
-    public function addAppointment( AppointmentObject $appointment ) {
+    public function addAppointment(AppointmentObject $appointment)
+    {
         // Init the params for the call
-        $params = [ "action" => "appointment_add" ];
+        $params = ["action" => "appointment_add"];
 
         // Parse the provided appointment
         $parsedAppointment = $appointment->toApiJSON();
@@ -592,24 +601,23 @@ class Salon_api
      * @param array     A simple Array<int> of service IDs
      * @return array    An array of staff members and their available time slots for the appointment
      */
-    public function appointment_availability(\DateTime $date, int $duration, array $items) {
-
-        { // Error Checking
+    public function appointment_availability(\DateTime $date, int $duration, array $items)
+    { { // Error Checking
             // Make sure the duration is at least 5 minutes
-            if ( $duration < 5 ) {
+            if ($duration < 5) {
                 throw new Exception("The duration must be greater than or equal to 5 minutes");
-            } else if ( $duration > 1440 ) {
+            } else if ($duration > 1440) {
                 throw new Exception("The duration of an appointment can not be greater than 24h/1440min");
             }
-    
+
             // Check if there are any items in the array
-            if ( empty($items) || count($items) < 1 ) {
+            if (empty($items) || count($items) < 1) {
                 throw new Exception("You must provide at least 1 service ID");
             }
-    
+
             // Check if the provided services are integers
-            foreach( $items as $i ) {
-                if ( !is_int($i) ) {
+            foreach ($items as $i) {
+                if (!is_int($i)) {
                     throw new Exception("The service ID must be of type Integer");
                 }
             }
@@ -632,14 +640,15 @@ class Salon_api
      * @param int $appointmentID The id of the appointment to cancel.
      * @param int $staffID The id of the staff that has performed this action, by default it will be 0 which means "client"
      */
-    public function cancelAppointment( int $appointmentID, int $staffID = 0) {
+    public function cancelAppointment(int $appointmentID, int $staffID = 0)
+    {
         // Set the parameters for the call
         $params = [
             "action" => "appointment_cancel",
             // The ID of the appointment to cancel
-            "appointment_id"  => $appointmentID,
+            "appointment_id" => $appointmentID,
             // The ID of the appointment to cancel
-            "staff_id"  => $staffID,
+            "staff_id" => $staffID,
         ];
 
         return $this->call($params);
@@ -650,6 +659,26 @@ class Salon_api
         $params = array();
         $params['action'] = 'client_get_balance';
         $params['client_id'] = $client_id;
+        return $this->call($params);
+    }
+
+    /**
+     * Send an email to a client
+     * @param mixed $email_address Is required if client_id is not provided
+     * @param string $subject
+     * @param string $message
+     * @param int $template_id
+     * @param int $client_id
+     */
+    public function sendEmail($email_address, $subject, $message, $template_id = 0, $client_id = 0)
+    {
+        $params = array();
+        $params['action'] = 'send_email';
+        $params['email_address'] = $email_address;
+        $params['client_id'] = $client_id;
+        $params['template_id'] = $template_id;
+        $params['subject'] = $subject;
+        $params['message'] = $message;
         return $this->call($params);
     }
 
@@ -767,7 +796,7 @@ class Salon_api
         $params['expires'] = $expires;
         return $this->call($params);
     }
-    
+
     public function addLead($data)
     {
         $params = array();
@@ -778,10 +807,12 @@ class Salon_api
 
     public function readLog()
     {
-        if (!file_exists($this->log_filename)) return '';
+        if (!file_exists($this->log_filename))
+            return '';
 
         $fh = fopen($this->log_filename, 'r');
-        if (false === $fh) return '';
+        if (false === $fh)
+            return '';
 
         $contents = fread($fh, filesize($this->log_filename));
         fclose($fh);
@@ -791,10 +822,12 @@ class Salon_api
 
     private function writeLog($message)
     {
-        if (!file_exists($this->log_filename)) return;
+        if (!file_exists($this->log_filename))
+            return;
 
         $fh = fopen($this->log_filename, 'a');
-        if (false === $fh) return;
+        if (false === $fh)
+            return;
 
         fwrite($fh, "{$message}\n\n");
         fclose($fh);
@@ -802,10 +835,12 @@ class Salon_api
 
     private function clearLog()
     {
-        if (!file_exists($this->log_filename)) return;
+        if (!file_exists($this->log_filename))
+            return;
 
         $fh = fopen($this->log_filename, 'w');
-        if (false === $fh) return;
+        if (false === $fh)
+            return;
 
         fclose($fh);
     }
@@ -813,54 +848,56 @@ class Salon_api
 
 
 
-class AppointmentObject {
+class AppointmentObject
+{
 
-    public function __construct(int $salon_id) {
+    public function __construct(int $salon_id)
+    {
         $this->salon_id = $salon_id;
     }
 
-    public function toApiJSON(): array {
-        $parsed = [];
-
-        { // Error checking
-            if ( empty($this->salon_id) || $this->salon_id < 1 )
+    public function toApiJSON(): array
+    {
+        $parsed = []; { // Error checking
+            if (empty($this->salon_id) || $this->salon_id < 1)
                 throw new Exception("Invalid Salon ID");
 
-            if ( empty($this->staffID) || $this->staffID < 1 )
+            if (empty($this->staffID) || $this->staffID < 1)
                 throw new Exception("Invalid staffID");
 
-            if ( empty($this->clientID) || $this->clientID < 1 )
+            if (empty($this->clientID) || $this->clientID < 1)
                 throw new Exception("Invalid clientID");
 
-            if ( empty($this->datetime) || $this->datetime->getTimestamp() < time() )
+            if (empty($this->datetime) || $this->datetime->getTimestamp() < time())
                 throw new Exception("Invalid DateTime: {$this->datetime->getTimestamp()} < " . time());
 
-            if ( empty($this->duration) || $this->duration < 5 )
+            if (empty($this->duration) || $this->duration < 5)
                 throw new Exception("Invalid Duration");
 
-            if ( empty($this->status) )
+            if (empty($this->status))
                 throw new Exception("Invalid Status");
 
-            if ( empty($this->items) )
+            if (empty($this->items))
                 throw new Exception("Please provide a valid list of items to add to the booking ( Services )");
         }
 
         // Build the object
         {
-            $parsed['salon_id']            = $this->salon_id;
-            $parsed['date']                = $this->datetime->format("Y-m-d");
-            $parsed['time']                = $this->datetime->format("H:i:s");
-            $parsed['duration']            = $this->duration;
-            $parsed['staff']               = $this->staffID;
-            $parsed['client']              = $this->clientID;
-            $parsed['status']              = $this->status;
-            $parsed['items']               = json_encode($this->items);
-    
-            $parsed['title']               = $this->title;
-            $parsed['notes']               = $this->notes;
-            $parsed['booking_type_id']     = $this->booking_type_id;
-            $parsed['booking_requested']   = $this->booking_requested;
+            $parsed['salon_id'] = $this->salon_id;
+            $parsed['date'] = $this->datetime->format("Y-m-d");
+            $parsed['time'] = $this->datetime->format("H:i:s");
+            $parsed['duration'] = $this->duration;
+            $parsed['staff'] = $this->staffID;
+            $parsed['client'] = $this->clientID;
+            $parsed['status'] = $this->status;
+            $parsed['items'] = json_encode($this->items);
+
+            $parsed['title'] = $this->title;
+            $parsed['notes'] = $this->notes;
+            $parsed['booking_type_id'] = $this->booking_type_id;
+            $parsed['booking_requested'] = $this->booking_requested;
             $parsed['marketing_source_id'] = $this->marketing_source_id;
+            $parsed['notify_client'] = $this->notify_client ? 1 : 0;
         }
 
         return $parsed;
@@ -954,10 +991,11 @@ class AppointmentObject {
      */
     public $marketing_source_id = null;
 
+    /**
+     * @mandatory false
+     * @description Notify the client of the appointment by email/SMS
+     * @type bool
+     */
+    public $notify_client = false;
+
 }
-
-
-
-
-
-
