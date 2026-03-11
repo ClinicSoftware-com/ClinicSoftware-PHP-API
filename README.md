@@ -3,7 +3,7 @@
 The ClinicSoftware PHP Library provides convenient access to the ClinicSoftware API from programs written in PHP. It provides a pre-defined class which manages most of the API calls that initializez itself dynamically.
 
 ## Requirements
-PHP 7.4 or later recommended, the lib file can be converted for compatibility with lower versions of php quite easily.
+PHP 8.2 or latest recommended, the lib file can be converted for compatibility with lower versions of php quite easily.
 
 ## Dependencies
 The bindings require the following php extensions in order to work properly:
